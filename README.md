@@ -1,9 +1,9 @@
 # Tic Tac Toe Wining Percentage Exploration
 
-## Team Member(s):
+### Team Member(s):
 Zijun Cai
 
-# Monte Carlo Simulation Scenario & Purpose:
+## Monte Carlo Simulation Scenario & Purpose:
 Scenario: Two players automatically play tic tac toe game, using MiniMax Theorem, starting with a random opening move of user and a random second move of another player. The user of this program is one of the user. He can choose how many time he wants to play this game in a roll, and the probability of being the first player in these games. The out come of each round (contains many tries in a roll) is the winning percentage of the user.   
 (Used to think of researching MNK-game with random m, n and k, but it is too complex to implement...)
   
