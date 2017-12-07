@@ -1,3 +1,6 @@
+import random
+
+
 class Game:
     def __init__(self):
         self.board = ['-' for i in range(0, 9)]
@@ -7,7 +10,7 @@ class Game:
     def print_board(self):
         """
         Print the current game board
-        :return:
+        :return:none
         """
         print("\nCurrent board:")
         for j in range(0, 9, 3):
@@ -19,10 +22,10 @@ class Game:
 
             print("")
 
-    def get_free_positions(self):
+    def get_avail_positions(self):
         """
         Get the list of available positions
-        :return:
+        :return: moves that still available
         """
         moves = []
         for i, v in enumerate(self.board):
@@ -33,9 +36,9 @@ class Game:
     def mark(self, marker, pos):
         """
         Mark a position with marker X or O
-        :param marker:
-        :param pos:
-        :return:
+        :param marker: the marker
+        :param pos: the position
+        :return: none
         """
         self.board[pos] = marker
         self.lastmoves.append(pos)
@@ -44,17 +47,16 @@ class Game:
     def revert_last_move(self):
         """
         Reset the last move
-        :return:
+        :return:none
         """
         self.board[self.lastmoves.pop()] = '-'
         self.winner = None
 
     def is_gameover(self):
         """
-        Test whether game has ended
-        :return:
+        Check whether the game has ended
+        :return: true if game ended, false otherwise
         """
-
         win_positions = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]
 
         for i, j, k in win_positions:
@@ -75,7 +77,6 @@ class Game:
         :param player2:
         :return:
         """
-
         self.p1 = player1
         self.p2 = player2
 
@@ -84,18 +85,18 @@ class Game:
             self.print_board()
 
             if i % 2 == 0:
-                if self.p1.type == 'H':
-                    print("[Human's Move]",end="")
-                else:
-                    print("[Computer's Move]",end="")
-
+                # if self.p1.type == 'H':
+                #     print("[Human's Move]",end="")
+                # else:
+                #     print("[Computer's Move]",end="")
+                print("[Player1's Move]", end="")
                 self.p1.move(self)
             else:
-                if self.p2.type == 'H':
-                    print("[Human's Move]",end="")
-                else:
-                    print("[Computer's Move]",end="")
-
+                # if self.p2.type == 'H':
+                #     print("[Human's Move]",end="")
+                # else:
+                #     print("[Computer's Move]",end="")
+                print("[Player2's Move]", end="")
                 self.p2.move(self)
 
             if self.is_gameover():
@@ -106,38 +107,15 @@ class Game:
                     print("Winner : %s" % self.winner)
                 return
 
-class Human:
-    def __init__(self, marker):
-        self.marker = marker
-        self.type = 'H'
-
-    def move(self, gameinstance):
-
-        while True:
-
-            m = input("Input position:")
-
-            try:
-                m = int(m)
-            except:
-                m = -1
-
-            if m not in gameinstance.get_free_positions():
-                print("Invalid move. Retry")
-            else:
-                break
-
-        gameinstance.mark(self.marker, m)
-
 
 class AI:
     """
     Class for Computer Player
     """
-
     def __init__(self, marker):
         self.marker = marker
         self.type = 'C'
+        self.count=0 # count for moves
 
         if self.marker == 'X':
             self.opponentmarker = 'O'
@@ -145,15 +123,19 @@ class AI:
             self.opponentmarker = 'X'
 
     def move(self, gameinstance):
-        move_position, score = self.maximized_move(gameinstance)
+        if self.count <1:
+            move_position=random.randrange(0,9)  # 0<=...<=8
+        else:
+            move_position, score = self.maximized_move(gameinstance)
         gameinstance.mark(self.marker, move_position)
+        self.count+=1
 
     def maximized_move(self, gameinstance):
         #  Find maximized move'''
         bestscore = None
         bestmove = None
 
-        for m in gameinstance.get_free_positions():
+        for m in gameinstance.get_avail_positions():
             gameinstance.mark(self.marker, m)
 
             if gameinstance.is_gameover():
@@ -175,11 +157,10 @@ class AI:
         :param gameinstance:
         :return:
         """
-
         bestscore = None
         bestmove = None
 
-        for m in gameinstance.get_free_positions():
+        for m in gameinstance.get_avail_positions():
             gameinstance.mark(self.opponentmarker, m)
 
             if gameinstance.is_gameover():
@@ -205,8 +186,9 @@ class AI:
 
         return 0  # Draw
 
+
 if __name__ == '__main__':
     game = Game()
-    player1 = Human("X")
+    player1 = AI("X")
     player2 = AI("O")
     game.play(player1, player2)
