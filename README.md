@@ -1,17 +1,17 @@
-# Tic Tac Toe Wining Percentage Exploration
+# Tic Tac Toe Losing Percentage Exploration
 
 ### Team Member(s):
 Zijun Cai
 
 ## Monte Carlo Simulation Scenario & Purpose:
-Scenario: Two players automatically play tic tac toe game, using MiniMax Theorem, starting with a random opening move of user and a random second move of another player. The user of this program is one of the user. He can choose how many time he wants to play this game in a roll, and the probability of being the first player in these games. The out come of each round (contains many tries in a roll) is the winning percentage of the user.   
-(Used to think of researching MNK-game with random m, n and k, but it is too complex to implement...)
+Scenario: Two players automatically play tic tac toe game, using MiniMax Theorem, starting with a random opening move of user and a random second move of another player. The user of this program is one of the user. He can choose how many time he wants to play this game in a roll, and the probability of being the first player in these games. The out come of each round (contains many tries in a roll) is the losing percentage of the user.
+
   
-Purpose: To explore the relationship between being the first player in this game and being the winner.
+Purpose: To explore the relationship between being the first player in this game and being the loser. Since I am using optimized move on both 2 players in this game, the best result is no one wins. So not losing in this game equals wining.
 
 
 ### Hypothesis before running the simulation:
-Since I use MiniMax Theorem to optimize every move instead of going a random move, I think there is a linear positive correlation betwwen the wining percentage of the user and the probability of being the first player. If there is 50% probability of the user to become the first player, the winning percentage may be 50% as well. If 100%, then 100% of winning percentage. If 0%, then 0% of winning percentage.
+Since I use MiniMax Theorem to optimize every move instead of going a random move, I think there is a linear negative correlation between the losing percentage of the user and the probability of being the first player. If there is 50% probability of the user to become the first player, the winning percentage may be 50% as well. If 100%, then 0% of losing percentage. If 0%, then 100% of losing percentage.
 
 ### Simulation's variables of uncertainty
 The parameter of every round (N,K)  
