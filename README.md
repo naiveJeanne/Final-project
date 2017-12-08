@@ -1,4 +1,4 @@
-# Tic Tac Toe Wining Percentage Exploration
+# Tic Tac Toe First Player Wining Percentage Analysis
 
 ### Team Member(s):
 Zijun Cai

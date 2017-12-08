@@ -12,13 +12,13 @@ class Game:
         Print the current game board
         :return:none
         """
-        print("\nCurrent board:")
+        print("\n--Current board--")
         for j in range(0, 9, 3):
             for i in range(3):
                 if self.board[j + i] == '-':
-                    print("%d |" % (j + i),end="")
+                    print("%d |" % (j + i), end="")
                 else:
-                    print("%s |" % self.board[j + i],end="")
+                    print("%s |" % self.board[j + i], end="")
 
             print("")
 
@@ -42,7 +42,6 @@ class Game:
         """
         self.board[pos] = marker
         self.lastmoves.append(pos)
-
 
     def revert_last_move(self):
         """
@@ -85,37 +84,34 @@ class Game:
             self.print_board()
 
             if i % 2 == 0:
-                # if self.p1.type == 'H':
-                #     print("[Human's Move]",end="")
-                # else:
-                #     print("[Computer's Move]",end="")
-                print("[Player1's Move]", end="")
+                print("--Player1's Move--", end="")
                 self.p1.move(self)
             else:
-                # if self.p2.type == 'H':
-                #     print("[Human's Move]",end="")
-                # else:
-                #     print("[Computer's Move]",end="")
-                print("[Player2's Move]", end="")
+                print("--Player2's Move--", end="")
                 self.p2.move(self)
 
             if self.is_gameover():
                 self.print_board()
                 if self.winner == '-':
                     print("Game over with Draw")
+                    return 0
                 else:
                     print("Winner : %s" % self.winner)
-                return
+                    if (self.winner == 'X'):
+                        return 1
+                    if (self.winner == 'O'):
+                        return 2
 
 
 class AI:
     """
     Class for Computer Player
     """
+
     def __init__(self, marker):
         self.marker = marker
         self.type = 'C'
-        self.count=0 # count for moves
+        self.count = 0  # count for moves
 
         if self.marker == 'X':
             self.opponentmarker = 'O'
@@ -123,12 +119,12 @@ class AI:
             self.opponentmarker = 'X'
 
     def move(self, gameinstance):
-        if self.count <1:
-            move_position=random.randrange(0,9)  # 0<=...<=8
+        if self.count < 1:
+            move_position = random.randrange(0, 9)  # 0<=...<=8
         else:
             move_position, score = self.maximized_move(gameinstance)
         gameinstance.mark(self.marker, move_position)
-        self.count+=1
+        self.count += 1
 
     def maximized_move(self, gameinstance):
         #  Find maximized move'''
@@ -148,7 +144,9 @@ class AI:
             if bestscore == None or score > bestscore:
                 bestscore = score
                 bestmove = m
-
+        if(bestscore==None):
+            bestscore=0
+            bestmove=random.choice(gameinstance.get_avail_positions())
         return bestmove, bestscore
 
     def minimized_move(self, gameinstance):
@@ -187,8 +185,14 @@ class AI:
         return 0  # Draw
 
 
+class MCS:  # for Monte Carlo Simulation
+    def play1time(self, flag: bool):  # flag==false, user is player1, otherwise use is player2
+        game = Game()
+        player1 = AI("X")
+        player2 = AI("O")
+        print(game.play(player1, player2))
+
+
 if __name__ == '__main__':
-    game = Game()
-    player1 = AI("X")
-    player2 = AI("O")
-    game.play(player1, player2)
+    mcs = MCS()
+    mcs.play1time(1)
