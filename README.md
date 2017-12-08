@@ -4,7 +4,7 @@
 Zijun Cai
 
 ## Monte Carlo Simulation Scenario & Purpose:
-Scenario: Two players automatically play tic tac toe game, using MiniMax Theorem, starting with a random opening move of user and a random second move of another player. The user of this program is one of the user. He can choose how many time he wants to play this game in a roll, and the probability of being the first player in these games. The out come of each round (contains many tries in a roll) is the losing percentage of the user.
+Scenario: Two players automatically play tic tac toe game, using MiniMax Theorem, starting with a random opening move of both users. The user of this program can choose to be one of the user. He can choose how many time he wants to play this game in a roll, and the probability of being the first player in these games. The out come of each round (contains many tries in a roll) is the wining percentage of the user.
 
   
 Purpose: To explore the relationship between being the first player in this game and being the loser.

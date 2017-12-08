@@ -144,9 +144,11 @@ class AI:
             if bestscore == None or score > bestscore:
                 bestscore = score
                 bestmove = m
+
         if(bestscore==None):
             bestscore=0
             bestmove=random.choice(gameinstance.get_avail_positions())
+
         return bestmove, bestscore
 
     def minimized_move(self, gameinstance):
