@@ -108,10 +108,11 @@ class AI:
     Class for Computer Player
     """
 
-    def __init__(self, marker):
+    def __init__(self, marker,start:int):
         self.marker = marker
         self.type = 'C'
         self.count = 0  # count for moves
+        self.start=start
 
         if self.marker == 'X':
             self.opponentmarker = 'O'
@@ -145,9 +146,9 @@ class AI:
                 bestscore = score
                 bestmove = m
 
-        if(bestscore==None):
-            bestscore=0
-            bestmove=random.choice(gameinstance.get_avail_positions())
+        if (bestscore == None):
+            bestscore = 0
+            bestmove = random.choice(gameinstance.get_avail_positions())
 
         return bestmove, bestscore
 
@@ -174,6 +175,10 @@ class AI:
                 bestscore = score
                 bestmove = m
 
+        if (bestscore == None):
+            bestscore = 0
+            bestmove = random.choice(gameinstance.get_avail_positions())
+
         return bestmove, bestscore
 
     def get_score(self, gameinstance):
@@ -188,13 +193,24 @@ class AI:
 
 
 class MCS:  # for Monte Carlo Simulation
-    def play1time(self, flag: bool):  # flag==false, user is player1, otherwise use is player2
+    def play1time(self, flag: bool, start: int):  # flag==false, user is player1, otherwise use is player2
         game = Game()
-        player1 = AI("X")
-        player2 = AI("O")
+        player1 = AI("X",0)
+        player2 = AI("O",0)
         print(game.play(player1, player2))
+
+    def play1round(self, prob: float, flag: bool, count: int):
+        """
+
+        :param prob:
+        :param flag:
+        :param count:
+        :return:
+        """
+        for i in range(count):
+            self.play1time(True)
 
 
 if __name__ == '__main__':
     mcs = MCS()
-    mcs.play1time(1)
+    mcs.play1time(1,0)
