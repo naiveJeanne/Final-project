@@ -1,7 +1,6 @@
 # Tic Tac Toe First Player Wining Percentage Analysis  
   
-### Team Member(s):  
-Zijun Cai  
+Team Member(s):  Zijun Cai  
   
 ## Monte Carlo Simulation Scenario & Purpose:  
 ### Scenario:  
@@ -32,14 +31,20 @@ Since I use MiniMax Theorem to optimize every move instead of going a random mov
 
 ### Simulation's variables of uncertainty
 The parameter of every round (K,N,P)  
-K -- the position of the open move of the first player -- int in 1, 2, 3, 4, 5, 6, 7, 8 (discrete distribution)  
-N -- times of playing tic tac toe games in a roll -- int in 50, 100, 1000 (discrete distribution)  
-P -- the probability of the user to be the first player in the round -- float between 0 and 1 with gap 0.02 (continuous distribution)  
+- K 
+  - the position of the open move of the first player 
+  - int in 1, 2, 3, 4, 5, 6, 7, 8 (discrete distribution)  
+- N 
+  - times of playing tic tac toe games in a roll 
+  - int in 50, 100, 1000 (discrete distribution)  
+- P 
+  - the probability of the user to be the first player in the round 
+  - float between 0 and 1 with gap 0.02 (continuous distribution)  
 
-I choose optimized move using MiniMax Theorem instead of a random one, I believe the former one is more like a human act. So my projects is a representation of reality to some extent.  
+Since I choose optimized move using MiniMax Theorem instead of a random one, I believe the former one is more like a human act. So my projects is a representation of reality to some extent.  
   
 ## Instructions on how to use the program:  
-Run Main.py  
+Run Main.py and there will be plots of all first move position result and all probability of being the player1 result, with 50, 100 and 1000 tries in a round. 
   
 ## Report
 ### Game Virtualization
