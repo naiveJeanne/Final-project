@@ -24,7 +24,7 @@ I choose optimized move using MiniMax Theorem instead of a random one, I believe
 ## Instructions on how to use the program:
 Run Main.py
 
-## Every try on game would be like this:
+## Every one game would be like this: (Board printing is turned off by annotation in the program)
 --Current board--
 0 |1 |2 |
 3 |4 |5 |

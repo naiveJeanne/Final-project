@@ -1,5 +1,6 @@
 import random
 import matplotlib.pyplot as plt
+import numpy as np
 
 class Game:
     def __init__(self):
@@ -10,7 +11,7 @@ class Game:
     def print_board(self):
         """
         Print the current game board
-        :return:none
+        :return: none
         """
         print("\n--Current board--")
         for j in range(0, 9, 3):
@@ -25,10 +26,10 @@ class Game:
     def get_avail_positions(self):
         """
         Get the list of available positions
-        :return: moves that still available
+        :return: moves that still available (from 0 to 8)
         """
         moves = []
-        for i, v in enumerate(self.board):  # start from 1
+        for i, v in enumerate(self.board):  # start from 0
             if v == '-':
                 moves.append(i)
         return moves
@@ -36,8 +37,8 @@ class Game:
     def mark(self, marker, pos):
         """
         Mark a position with marker X or O
-        :param marker: the marker
-        :param pos: the position
+        :param marker: the marker X or O
+        :param pos: the position index
         :return: none
         """
         self.board[pos] = marker
@@ -45,8 +46,8 @@ class Game:
 
     def revert_last_move(self):
         """
-        Reset the last move
-        :return:none
+        Revert the last move
+        :return: none
         """
         self.board[self.lastmoves.pop()] = '-'
         self.winner = None
@@ -71,10 +72,10 @@ class Game:
 
     def play(self, player1, player2):
         """
-        Execute the game play with players
-        :param player1:
-        :param player2:
-        :return:
+        Execute the game with 2 players
+        :param player1: Automatic Player1
+        :param player2: Automatic Player2
+        :return: 0 if game ends with draw, 1 if player1 wins, 2 if player2 wins
         """
 
         self.p1 = player1
@@ -132,9 +133,9 @@ class AI:
 
     def maximized_move(self, gameinstance):
         """
-        Find maximized move
-        :param gameinstance:
-        :return:
+        Find the best move for the player himself. It is the best situation for the player who call this funtion.
+        :param gameinstance: a game instance with a board.
+        :return: move postion index of the player (int), score of the final result if the player makes this move (int)
         """
         bestscore = None
         bestmove = None
@@ -157,9 +158,9 @@ class AI:
 
     def minimized_move(self, gameinstance):
         """
-        Find the minimized move
-        :param gameinstance:
-        :return:
+        Find the worst move for opponent. It is the best situation for the player who call this funtion.
+        :param gameinstance: a game instance with a board.
+        :return: move postion index of the opponent (int), score of the final result if the opponent makes this move (int)
         """
         bestscore = None
         bestmove = None
@@ -182,6 +183,11 @@ class AI:
         return bestmove, bestscore
 
     def get_score(self, gameinstance):
+        """
+        get the final result of game
+        :param gameinstance: a game instance with a board.
+        :return: 0 if the game ends with draw, 1 if the player who call this function wins, -1 if the opponent wins
+        """
         if gameinstance.is_gameover():
             if gameinstance.winner == self.marker:
                 return 1  # This player himself Won
@@ -195,11 +201,11 @@ class AI:
 class MCS:  # for Monte Carlo Simulation
     def play1round(self, prob: float, count: int, start: int):
         """
-
+        play <count> times of games with the probability <prob> of being the player1 & with the 1st move index <start>
         :param prob: probability of being player1
         :param count: total time of games played in this round
         :param start: first place the player1 want to move: valid number 0~8. -1 if goes a random first move.
-        :return:
+        :return: win percentage, draw percentage, win+draw percentage
         """
         win = 0  # count the times of winning of user
         draw = 0  # count the times of game ending with draw
@@ -224,26 +230,66 @@ class MCS:  # for Monte Carlo Simulation
         print("time as player1", int(count*prob),";\ttime as player2", int(count*(1.0-prob)))
         return 100*float(win)/float(count), 100*float(draw)/float(count), 100*float(win)/float(count)+100*float(draw)/float(count)
 
-    def all_1st_move_analysis(self):
-        allPos = [1, 2, 3, 4, 5, 6, 7, 8, 9]  # index fo all positions
+    def all_1st_move_analysis(self,times:int):
+        """
+        Try <times> of game in a round with different first move position (0 ~ 8).
+        Create a line chart of the result with 3 lines.
+        :param times: the number of games executed in a round
+        :return: none
+        """
+        allPos = [1, 2, 3, 4, 5, 6, 7, 8, 9]  # index fo all positions. show them as 1 ~ 9 for easier read.
         win_of_AllPos = []
         draw_of_allPos = []
         win_draw_of_allPos = []
         for i in range(9):
-            res=self.play1round(1, 5, i)
+            res = self.play1round(1, times, i)
             win_of_AllPos.append(res[0])
             draw_of_allPos.append(res[1])
             win_draw_of_allPos.append(res[2])
+        plt.figure()
         plt.plot(allPos, win_of_AllPos,linewidth=3,label="Win")
         plt.plot(allPos, draw_of_allPos,linewidth=3,label="Draw")
         plt.plot(allPos, win_draw_of_allPos,linewidth=3,label="Win & Draw")
-        plt.title('Win/Draw/Win+Draw Percentage of the User when User is always the Player1')
-        plt.xlabel('First Move Position of User')
-        plt.ylabel('Win/Draw/Win+Draw Percentage of the User')
+        plt.title('Win/Draw/Win+Draw Percentage of User with Different Percentage of Being Player1 ('+ str(times) +' times)')
+        plt.xlabel('First Move Position index of User')
+        plt.ylabel('Win/Draw/Win+Draw Percentage of User')
         plt.legend(('Win', 'Draw', 'Win & Draw'), loc='upper center', shadow=True)
-        plt.show()
+
+
+
+    def player1_win_percentage_analysis(self,times:int):
+        """
+        Try <times> of game in a round with different probability of being the player1 of user.
+        Create a line chart of the result with 3 lines.
+        :param times: the number of games executed in a round
+        :return: none
+        """
+        all_probability = np.arange(0.0, 1.02, 0.02)  # index fo all positions
+        win_of_AllPos = []
+        draw_of_allPos = []
+        win_draw_of_allPos = []
+        for i in all_probability:
+            res = self.play1round(i, times, -1)
+            win_of_AllPos.append(res[0])
+            draw_of_allPos.append(res[1])
+            win_draw_of_allPos.append(res[2])
+        plt.figure()
+        plt.plot(all_probability, win_of_AllPos, linewidth=3, label="Win")
+        plt.plot(all_probability, draw_of_allPos, linewidth=3, label="Draw")
+        plt.plot(all_probability, win_draw_of_allPos, linewidth=3, label="Win & Draw")
+        plt.title('Win/Draw/Win+Draw Percentage of User with Different Percentage of Being Player1 ('+ str(times) +' times)')
+        plt.xlabel('Percentage of being Player1 of User')
+        plt.ylabel('Win/Draw/Win+Draw Percentage of User')
+        plt.legend(('Win', 'Draw', 'Win & Draw'), loc='upper center', shadow=True)
+
 
 
 if __name__ == '__main__':
     mcs = MCS()
-    mcs.all_1st_move_analysis()
+    mcs.all_1st_move_analysis(50)
+    mcs.all_1st_move_analysis(100)
+    mcs.all_1st_move_analysis(1000)
+    mcs.player1_win_percentage_analysis(50)
+    mcs.player1_win_percentage_analysis(100)
+    mcs.player1_win_percentage_analysis(1000)
+    plt.show()
