@@ -1,5 +1,5 @@
 import random
-
+import matplotlib.pyplot as plt
 
 class Game:
     def __init__(self):
@@ -28,7 +28,7 @@ class Game:
         :return: moves that still available
         """
         moves = []
-        for i, v in enumerate(self.board):
+        for i, v in enumerate(self.board):  # start from 1
             if v == '-':
                 moves.append(i)
         return moves
@@ -76,43 +76,45 @@ class Game:
         :param player2:
         :return:
         """
+
         self.p1 = player1
         self.p2 = player2
 
         for i in range(9):
 
-            self.print_board()
+            #self.print_board()
 
             if i % 2 == 0:
-                print("--Player1's Move--", end="")
+                #print("--Player1's Move--", end="")
                 self.p1.move(self)
             else:
-                print("--Player2's Move--", end="")
+                #print("--Player2's Move--", end="")
                 self.p2.move(self)
 
             if self.is_gameover():
-                self.print_board()
+                #self.print_board()
                 if self.winner == '-':
-                    print("Game over with Draw")
+                    #print("Game over with Draw")
                     return 0
                 else:
-                    print("Winner : %s" % self.winner)
+                    #print("Winner : %s" % self.winner)
                     if (self.winner == 'X'):
                         return 1
                     if (self.winner == 'O'):
                         return 2
 
+        #print("Game over with Draw")
+        return 0
 
 class AI:
     """
-    Class for Computer Player
+    Class for Automatic Player
     """
-
     def __init__(self, marker,start:int):
         self.marker = marker
         self.type = 'C'
-        self.count = 0  # count for moves
-        self.start=start
+        self.firstmove = True  # flag for first move
+        self.start = start
 
         if self.marker == 'X':
             self.opponentmarker = 'O'
@@ -120,15 +122,20 @@ class AI:
             self.opponentmarker = 'X'
 
     def move(self, gameinstance):
-        if self.count < 1:
-            move_position = random.randrange(0, 9)  # 0<=...<=8
+        if self.firstmove:
+            if self.start == -1: move_position = random.randrange(0, 9)  # 1<=...<=9
+            else: move_position = self.start
+            self.firstmove = False
         else:
             move_position, score = self.maximized_move(gameinstance)
         gameinstance.mark(self.marker, move_position)
-        self.count += 1
 
     def maximized_move(self, gameinstance):
-        #  Find maximized move'''
+        """
+        Find maximized move
+        :param gameinstance:
+        :return:
+        """
         bestscore = None
         bestmove = None
 
@@ -145,10 +152,6 @@ class AI:
             if bestscore == None or score > bestscore:
                 bestscore = score
                 bestmove = m
-
-        if (bestscore == None):
-            bestscore = 0
-            bestmove = random.choice(gameinstance.get_avail_positions())
 
         return bestmove, bestscore
 
@@ -175,42 +178,72 @@ class AI:
                 bestscore = score
                 bestmove = m
 
-        if (bestscore == None):
-            bestscore = 0
-            bestmove = random.choice(gameinstance.get_avail_positions())
 
         return bestmove, bestscore
 
     def get_score(self, gameinstance):
         if gameinstance.is_gameover():
             if gameinstance.winner == self.marker:
-                return 1  # Won
+                return 1  # This player himself Won
 
             elif gameinstance.winner == self.opponentmarker:
-                return -1  # Opponent won
+                return -1  # The Opponent won
 
         return 0  # Draw
 
 
 class MCS:  # for Monte Carlo Simulation
-    def play1time(self, flag: bool, start: int):  # flag==false, user is player1, otherwise use is player2
-        game = Game()
-        player1 = AI("X",0)
-        player2 = AI("O",0)
-        print(game.play(player1, player2))
-
-    def play1round(self, prob: float, flag: bool, count: int):
+    def play1round(self, prob: float, count: int, start: int):
         """
 
-        :param prob:
-        :param flag:
-        :param count:
+        :param prob: probability of being player1
+        :param count: total time of games played in this round
+        :param start: first place the player1 want to move: valid number 0~8. -1 if goes a random first move.
         :return:
         """
-        for i in range(count):
-            self.play1time(True)
+        win = 0  # count the times of winning of user
+        draw = 0  # count the times of game ending with draw
+
+        # user is player1
+        for i in range(int(count*prob)):
+            game = Game()
+            player1 = AI("X", start)
+            player2 = AI("O", -1)
+            res = game.play(player1, player2)
+            if res == 1: win += 1
+            elif res == 0: draw += 1
+
+        # user is player2
+        for i in range(int(count*(1.0-prob))):
+            game = Game()
+            player1 = AI("X", -1)
+            player2 = AI("O", -1)
+            res = game.play(player1, player2)
+            if res == 2: win += 1
+            elif res == 0: draw += 1
+        print("time as player1", int(count*prob),";\ttime as player2", int(count*(1.0-prob)))
+        return 100*float(win)/float(count), 100*float(draw)/float(count), 100*float(win)/float(count)+100*float(draw)/float(count)
+
+    def all_1st_move_analysis(self):
+        allPos = [1, 2, 3, 4, 5, 6, 7, 8, 9]  # index fo all positions
+        win_of_AllPos = []
+        draw_of_allPos = []
+        win_draw_of_allPos = []
+        for i in range(9):
+            res=self.play1round(1, 5, i)
+            win_of_AllPos.append(res[0])
+            draw_of_allPos.append(res[1])
+            win_draw_of_allPos.append(res[2])
+        plt.plot(allPos, win_of_AllPos,linewidth=3,label="Win")
+        plt.plot(allPos, draw_of_allPos,linewidth=3,label="Draw")
+        plt.plot(allPos, win_draw_of_allPos,linewidth=3,label="Win & Draw")
+        plt.title('Win/Draw/Win+Draw Percentage of the User when User is always the Player1')
+        plt.xlabel('First Move Position of User')
+        plt.ylabel('Win/Draw/Win+Draw Percentage of the User')
+        plt.legend(('Win', 'Draw', 'Win & Draw'), loc='upper center', shadow=True)
+        plt.show()
 
 
 if __name__ == '__main__':
     mcs = MCS()
-    mcs.play1time(1,0)
+    mcs.all_1st_move_analysis()
