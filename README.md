@@ -25,7 +25,10 @@ To explore the relationship between
   
   
 ### Hypothesis before running the simulation:  
-Since I use MiniMax Theorem to optimize every move instead of going a random move, I think there is a linear negative correlation between the losing percentage of the user and the probability of being the first player. If there is 50% probability of the user to become the first player, the winning percentage may be 50% as well. If 100%, then almost 100% of wining percentage. If 0%, then almost 0% of wining percentage.
+Since I use MiniMax Theorem to optimize every move instead of going a random move, I think 
+1. For 1st move position: When choosing the center position of the board as the opening move, the winning percentage of user would be highest. Choosing other positions would lead to relatively lower winning percantage in a round.
+
+2. For probability of being the player1: There is a linear positive correlation between the winning percentage of the user and the probability of being the first player. If there is 50% probability of the user to become the first player, the winning percentage may be around 50% as well. If 100%, then around 100% of wining percentage. If 0%, then around 0% of wining percentage.
 
 ### Simulation's variables of uncertainty
 The parameter of every round (K,N,P)  
@@ -38,8 +41,11 @@ I choose optimized move using MiniMax Theorem instead of a random one, I believe
 ## Instructions on how to use the program:  
 Run Main.py  
   
-## Every one game would be like this: (Board printing is turned off by annotation in the program)  
---Current board--    
+## Report
+### Game Virtualization
+(This function is turned off by annotation in the program)  
+One try on this game would be like this:  
+--Current board--  
 0 |1 |2 |  
 3 |4 |5 |  
 6 |7 |8 |  
@@ -80,7 +86,13 @@ O |X |O |
 X |7 |8 |  
 Winner : X  
   
-## Sources Used:  
+### Plot
+1. All 1st move position analysis  
+  
+2. All probability of being the player1 analysis  
+  
+  
+## Sources Used:  
 https://en.wikipedia.org/wiki/Tic-tac-toe  
 https://en.wikipedia.org/wiki/Minimax_theorem
 
