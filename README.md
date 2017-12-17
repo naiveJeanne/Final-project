@@ -105,7 +105,8 @@ As we can see in the plots, choosing the corner position 1, 3, 7 or 9 in opening
   ![figure_5](https://user-images.githubusercontent.com/16079206/34077880-0b6cb80c-e2d4-11e7-9973-ee9f57a12a01.png)  
   ![figure_6](https://user-images.githubusercontent.com/16079206/34077881-0b7c4042-e2d4-11e7-9c3b-9a4d0e636013.png)  
 As we can see in the plots, there is a linear positive correlation between the winning percentage of the user and the probability of being the first player, which is the same as my hypothesis.  
-  However, I expected 100% winning percentage of user when he has 100% probability of being the first player, 50% to 50%, and 0% to 0%. While the result is 50% winning percentage of user when he has 100% probability of being the first player, 25% to 50%, and 0% to 0%. When plusing the percentage of game ending with draw, the total percentage of win plus draw to probability of being the first player is the relationship of 100% to 100%, 50% to 50%, 0% to 0%. This is a little confusing.  
+  However, I expected 100% winning percentage of user when he has 100% probability of being the first player, 50% to 50%, and 0% to 0%. While the result is 50% winning percentage of user when he has 100% probability of being the first player, 25% to 50%, and 0% to 0%. This is a little confusing.  
+  Since both players have best moves, they can hardly lose. The worst case is the game ends with draw. So when plusing the percentage of game ending with draw, the total percentage of win plus draw to probability of being the first player is the relationship of 100% to 100%, 50% to 50%, 0% to 0%.   
    
 ## Conclusion
 1. Choosing the corner position of the board as opening move has the highest winning probability.  
