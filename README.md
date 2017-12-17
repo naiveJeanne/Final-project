@@ -32,7 +32,7 @@ Since I use MiniMax Theorem to optimize every move instead of going a random mov
 ### Simulation's variables of uncertainty
 The parameter of every round (K,N,P)  
 - K 
-  - the position of the open move of the first player 
+  - the position of the opening move of the first player 
   - int in 1, 2, 3, 4, 5, 6, 7, 8 (discrete distribution)  
 - N 
   - times of playing tic tac toe games in a roll 
